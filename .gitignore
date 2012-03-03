@@ -1,0 +1,9 @@
+*
+!.local/bin/.example
+!.bashrc
+!.bash_logout
+!.inputrc
+!.bash_profile
+!.gitconfig
+!.gitignore
+!.wgetrc
