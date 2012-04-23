@@ -10,7 +10,6 @@ export PATH="/home/test/.local/bin:$PATH"
 export PAGER="/usr/bin/less -isR"
 
 set -o vi
-export TERM=screen-256color
 export EDITOR=/usr/bin/vim
 export PROMPT_COMMAND='export TTY=`tty`'
 export PS1="\
@@ -20,3 +19,5 @@ export PS1="\
 \[\033[1;30m\]+\[\033[1;33m\]\${SHLVL} \
 \[\033[1;30m\]!\[\033[1;33m\]\! \
 \[\033[1;34m\]\w\[\033[1;35m\] \n％ \[\033[0;0m\]"
+
+[[ -n $DISPLAY ]] &&  export TERM=screen-256color
