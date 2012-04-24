@@ -6,7 +6,7 @@ fi
 umask 0077
 
 export LANG=en_US.UTF-8
-export PATH="/home/test/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 export PAGER="/usr/bin/less -isR"
 
 set -o vi
