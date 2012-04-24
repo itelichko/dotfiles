@@ -7,3 +7,15 @@
 !.gitconfig
 !.gitignore
 !.wgetrc
+
+!.local/bin/man
+!.local/bin/info
+!.vimrc
+!.vim
+!.vim/vimrc
+!.vim/bundle
+!.vim/bundle/*
+!.vim/bundle/*/*
+!.vim/bundle/*/*/*
+.vim/bundle/*/doc/tags
+.vim/bundle/*/.VimballRecord
