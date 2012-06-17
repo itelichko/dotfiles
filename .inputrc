@@ -61,6 +61,6 @@ set keymap vi
 set keymap vi-insert
 
 set bind-tty-special-chars off
-
+set completion-ignore-case on
 "\C-w": unix-filename-rubout
 #"\C-[": suspend
