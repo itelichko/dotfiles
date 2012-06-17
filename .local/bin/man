@@ -1,2 +1,4 @@
 #!/bin/sh
-vim -c "Man $@" -c "only"
+TOPIC=$1
+SECTION=$2
+vim -c "Man $TOPIC $SECTION" -c "only"
