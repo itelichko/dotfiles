@@ -1,5 +1,4 @@
 *
-!.local/bin/.example
 !.bashrc
 !.bash_logout
 !.inputrc
@@ -8,8 +7,12 @@
 !.gitignore
 !.wgetrc
 
+!.local/
+!.local/bin
+!.local/bin/.example
 !.local/bin/man
 !.local/bin/info
+
 !.vimrc
 !.vim
 !.vim/vimrc
