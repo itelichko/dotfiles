@@ -21,6 +21,7 @@ set autoindent
 set copyindent
 set virtualedit=all
 set fileencoding=utf-8
+set fileencodings=ucs-bom,utf-8,cp1251,default,latin1
 set bufhidden=hide
 set nowrap
 set tabstop=2
@@ -33,7 +34,7 @@ set ignorecase
 set smartcase
 set hlsearch
 set list
-set listchars=tab:▸\ ,eol:¬
+set listchars=tab:▸\ ,eol:↵
 " set statusline=%<%f\ %h\%m\%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 " set statusline=%F%m%r%h%w\ [FMT=%{&ff}]\ [TYPE=%Y]\
 "   [ASC=\%03.3b(\%02.2B)]\ [POS=%03l,%02v(%L)]\ [%p%%]
@@ -50,17 +51,18 @@ else
 	let &t_EI = ""
 endif
 
+function! MyFoldTitle()
+	let line = getline(v:foldstart)
+	" let line = substitute(line,'\t', repeat(' ',b:MyShiftWidth),'g')
+	let line = substitute(line,'\t', repeat(' ',&shiftwidth),'g')
+	" let line = substitute(line,'/\*\|\*/\|\!@#\|#@!','','g')
+	let line = substitute(line,'\(.\{75,75}\).*','\1...','g')
+	let lines_count = v:foldend - v:foldstart
+	return line . " <" . lines_count . " lines>"
+endfunction
+set foldtext=MyFoldTitle()
+
 " TODO fix this, maybe rewrite in vimscript (too slow on large files)
-" let b:MyShiftWidth = 2
-" function! MyFoldTitle()
-" 	let line = getline(v:foldstart)
-" 	let line = substitute(line,'\t', repeat(' ',b:MyShiftWidth),'g')
-" 	let line = substitute(line,'/\*\|\*/\|\!@#\|#@!','','g')
-" 	let line = substitute(line,'\(.\{75,75}\).*','\1...','g')
-" 	let lines_count = v:foldend - v:foldstart
-" 	return line . " <" . lines_count . " lines>"
-" endfunction
-" set foldtext=MyFoldTitle()
 " 
 " function! PerlReturn(param)
 " 	let g:perlresult = a:param
@@ -110,7 +112,8 @@ function! SetPathToProperLocation()
 	\ || codedir == '$HOME/.fvwm'
 		exe 'set path='.codedir.'/**'
 	else
-		set path=$HOME/programming/**
+		" set path=$HOME/programming/**
+		set path=expand('%:h')
 	endif
 endfunction
 
@@ -229,6 +232,8 @@ nnoremap <leader>v V`]
 nnoremap / /\v
 vnoremap / /\v
 
+if has('perl')
+
 " simple REPL interaction for forth
 perl << EOF
 my $replPipe = "~/programming/forth/pipe.sh";;
@@ -277,3 +282,5 @@ nnoremap <leader>rr :perl replPasteLine()<cr>
 nnoremap <leader>ra :perl replPasteFile()<cr>
 nnoremap <leader>rw :perl replPastePara()<cr>
 vnoremap <leader>rr :perldo replAccum($_)<cr>:perl replPasteAccum()<cr>
+
+endif
