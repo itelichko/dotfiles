@@ -158,7 +158,7 @@ fun! manpageview#ManPageView(viamap,bknum,...) range
    echohl WarningMsg
    echo "***warning*** missing topic"
    echohl None
-   sleep 2
+   sleep 1
 "   call Dret("manpageview#ManPageView : missing topic")
    return
   endif
@@ -503,7 +503,7 @@ fun! manpageview#ManPageView(viamap,bknum,...) range
    echohl ErrorMsg
    echo "***sorry*** g:manpageview_winopen<".g:manpageview_winopen."> not supported"
    echohl None
-   sleep 2
+   sleep 1
    call s:MPVRestoreSettings()
 "   call Dret("manpageview#ManPageView : manpageview_winopen<".g:manpageview_winopen."> not supported")
    return
@@ -682,7 +682,7 @@ fun! manpageview#ManPageView(viamap,bknum,...) range
    echohl ErrorMsg
    echo "***warning*** sorry, no manpage exists for <".manpagetopic.">"
    echohl None
-   sleep 2
+   sleep 1
    if exists("g:mpv_before_k_posn")
 	sil! call RestoreWinPosn(g:mpv_before_k_posn)
 	unlet g:mpv_before_k_posn
@@ -883,12 +883,12 @@ fun! s:ManPageInfo(type)
    echohl ErrorMsg
    echo "***sorry*** unable to view selection"
    echohl None
-   sleep 2
+   sleep 1
   elseif node == ""
    echohl ErrorMsg
    echo "***sorry*** ".fail
    echohl None
-   sleep 2
+   sleep 1
   else
    call manpageview#ManPageView(1,0,node.".i")
   endif
@@ -929,7 +929,7 @@ fun! s:NextInfoLink()
 		echohl ErrorMsg
 	   	echo '***sorry*** no links found' 
 	   	echohl None
-		sleep 2
+		sleep 1
     endif
 endfun
 
