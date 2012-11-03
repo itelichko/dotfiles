@@ -11,6 +11,7 @@
 !.local/bin
 !.local/bin/.example
 !.local/bin/man
+!.local/bin/ack
 !.local/bin/info
 
 !.vimrc
