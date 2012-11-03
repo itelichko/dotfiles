@@ -2,17 +2,31 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
-# Put your fun stuff here.
 export TTY=$(tty)
-export COLUMNS=$(tput cols) # not set under cygwin
+export COLUMNS=$(tput cols) # COLUMNS is not set under cygwin
 
 function escape { echo "\[\033[$1\]"; }
-  RESET_REAL=$(escape '0m')
-    RED_REAL=$(escape '1;31m')
-  BROWN_REAL=$(escape '1;33m')
-   BLUE_REAL=$(escape '1;34m')
-MAGENTA_REAL=$(escape '1;35m')
-   GRAY_REAL=$(escape '38;5;242m')
+
+if [ -n "$DISPLAY" ]; then
+    RESET_REAL=$(escape '0m')
+      RED_REAL=$(escape '1;31m')
+    BROWN_REAL=$(escape '1;33m')
+     BLUE_REAL=$(escape '1;34m')
+  MAGENTA_REAL=$(escape '1;35m')
+     GRAY_REAL=$(escape '38;5;242m')
+USERCOLOR_REAL=$(escape '38;5;110m')
+HOSTCOLOR_REAL=$(escape '38;5;110m')
+else
+    RESET_REAL=$(escape '0m')
+      RED_REAL=$(escape '1;31m')
+    BROWN_REAL=$(escape '1;33m')
+     BLUE_REAL=$(escape '1;34m')
+  MAGENTA_REAL=$(escape '1;35m')
+     GRAY_REAL=$(escape '1;30m')
+USERCOLOR_REAL=$(escape '1;36m')
+HOSTCOLOR_REAL=$(escape '1;36m')
+fi
+
 function color {
 	  RESET=$RESET_REAL
 	    RED=$RED_REAL
@@ -20,7 +34,10 @@ function color {
 	   BLUE=$BLUE_REAL
 	MAGENTA=$MAGENTA_REAL
 	   GRAY=$GRAY_REAL
+USERCOLOR=$USERCOLOR_REAL
+HOSTCOLOR=$HOSTCOLOR_REAL
 }
+
 function nocolor {
 	  RESET=
 	    RED=
@@ -28,6 +45,8 @@ function nocolor {
 	   BLUE=
 	MAGENTA=
 	   GRAY=
+USERCOLOR=
+HOSTCOLOR=
 }
 
 function prompt {
@@ -39,12 +58,12 @@ function prompt {
 		GITSTATUS="${GRAY}(git:${GRAY}${GIT_BRANCH}${GRAY}) "
 	fi fi
 
-	PROMPT="${RED}${USER}${GRAY}@${RED}${HOSTNAME} \
+	PROMPT="${USERCOLOR}${USER}${GRAY}@${HOSTCOLOR}${HOSTNAME} \
 ${GRAY}&${BROWN}${JOBNUM} \
 ${GRAY}^${BROWN}${TTY:5} \
 ${GRAY}+${BROWN}${SHLVL} \
 ${GRAY}!${BROWN}${HISTNUM} \
-${BLUE}${PWDNAME} ${GITSTATUS}${GRAY}${FILL}\n${MAGENTA}％ ${RESET}"
+${BLUE}${PWDNAME} ${GITSTATUS}${GRAY}${FILL}\n${MAGENTA}# ${RESET}"
 }
 function gitstatus {
 	GIT_BRANCH=
@@ -73,17 +92,7 @@ function promptcmd {
 	JOBNUM=$(( $(jobs -r | wc -l) + 0 ))
 	HISTNUM=$(( $(history 1 | cut -b 1-6) + 1 ))
 
-	if [ "$OSTYPE" != "cygwin" ] ; then # too slow on cygwin
-		gitstatus
-
-		local OLDSTTY=$(stty -g) # get cursor position and add new line
-		exec < /dev/tty          # if we are not in the first column
-		stty raw -echo min 0
-		echo -en "\033[6n" > /dev/tty && read -sdR CURPOS
-		stty $OLDSTTY
-		exec < $TTY
-		[[ ${CURPOS##*;} -gt 1 ]] && echo -e "\033[3;31m↵\033[0m"
-	fi
+	gitstatus
 
 	nocolor
 	prompt
@@ -91,7 +100,7 @@ function promptcmd {
 		for (( I = $COLUMNS; I >= 1 ; I-- )) ; do
 			FILL="${FILL}─"
 		done
-		BURP="${PROMPT/─*％*/}"
+		BURP="${PROMPT/─*#*/}"
 		while [ -n "$BURP" ] ; do
 			BURP=${BURP/?/}
 			FILL=${FILL/?/}
