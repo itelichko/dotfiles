@@ -7,7 +7,7 @@ export COLUMNS=$(tput cols) # COLUMNS is not set under cygwin
 
 function escape { echo "\[\033[$1\]"; }
 
-if [ -n "$DISPLAY" ]; then
+if [[ -n "$DISPLAY" && "$TERM" == *-256color ]] ; then
     RESET_REAL=$(escape '0m')
       RED_REAL=$(escape '1;31m')
     BROWN_REAL=$(escape '1;33m')
@@ -103,7 +103,7 @@ function promptcmd {
 		BURP="${PROMPT/─*#*/}"
 		while [ -n "$BURP" ] ; do
 			BURP=${BURP/?/}
-			FILL=${FILL/?/}
+			FILL=${FILL/─/}
 		done
 	color
 	prompt
@@ -115,9 +115,10 @@ export PATH="$HOME/.local/bin:$PATH"
 export PAGER="/usr/bin/less -isR"
 export EDITOR="/usr/bin/vim"
 
-[[ -n "$DISPLAY" || "$OSTYPE" == "cygwin" ]] && export TERM=screen-256color
-
 umask 0077
 set -o vi
 
 alias ..="source ~/.bashrc"
+alias ll="ls -alrth"
+alias 256color="export TERM=screen-256color; .."
+alias 16color="export TERM=screen; .."

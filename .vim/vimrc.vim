@@ -10,7 +10,6 @@
 source ~/.vim/bundle/vim-pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
-colorscheme xoria256
 filetype plugin on
 " filetype indent on  " very annoying on perl syntax
 syntax enable
@@ -43,6 +42,7 @@ set listchars=tab:▸\ ,eol:↵
 " set relativefilenumber
 
 if $TERM == 'screen-256color'
+	colorscheme xoria256
 	" escape sequences for changing cursor color
 	let &t_SI = "\<Esc>]12;yellow\x7"
 	let &t_EI = "\<Esc>]12;orchid3\x7"
@@ -236,7 +236,7 @@ if has('perl')
 
 " simple REPL interaction for forth
 perl << EOF
-my $replPipe = "~/programming/forth/pipe.sh";;
+my $replPipe = "~/.local/bin/repl.sh";
 my $replBuffer;
 sub replAccum      { $replBuffer .= $_[0]."\n" }
 sub replPasteAccum {
