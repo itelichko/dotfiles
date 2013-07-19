@@ -7,7 +7,7 @@ export COLUMNS=$(tput cols) # COLUMNS is not set under cygwin
 
 function escape { echo "\[\033[$1\]"; }
 
-if [[ -n "$DISPLAY" && "$TERM" == *-256color ]] ; then
+if [[ "$TERM" == *-256color ]] ; then
     RESET_REAL=$(escape '0m')
       RED_REAL=$(escape '1;31m')
     BROWN_REAL=$(escape '1;33m')
