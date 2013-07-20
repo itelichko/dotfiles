@@ -6,6 +6,7 @@
 !.gitconfig
 !.gitignore
 !.wgetrc
+!.tmux.conf
 
 !.local/
 !.local/bin
