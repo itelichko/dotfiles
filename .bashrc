@@ -70,22 +70,22 @@ function gitstatus {
 	GIT_DIRTY=
 
 	local GIT_BIN=$(which git 2>/dev/null)
-	[[ -z $GIT_BIN ]] && return
+	[[ -z "$GIT_BIN" ]] && return
 
 	local CUR_DIR=$PWD
-	while [ ! -d ${CUR_DIR}/.git ] && [ ! $CUR_DIR = "/" ]; do
+	while [ ! -d "${CUR_DIR}/.git" ] && [ ! "${CUR_DIR}" = "/" ]; do
 		CUR_DIR=${CUR_DIR%/*};
 	done
-	[[ ! -d ${CUR_DIR}/.git ]] && return
+	[[ ! -d "${CUR_DIR}/.git" ]] && return
 
-	[[ $CUR_DIR == $HOME ]] && [[ $PWD != $HOME ]] && return
+	[[ "$CUR_DIR" == "$HOME" ]] && [[ "$PWD" != "$HOME" ]] && return
 
 	GIT_BRANCH=$($GIT_BIN symbolic-ref HEAD 2>/dev/null)
-	[[ -z $GIT_BRANCH ]] && return
+	[[ -z "$GIT_BRANCH" ]] && return
 	GIT_BRANCH=${GIT_BRANCH#refs/heads/}
 
 	local GIT_STATUS=$($GIT_BIN status --porcelain 2>/dev/null)
-	[[ -n $GIT_STATUS ]] && GIT_DIRTY=true
+	[[ -n "$GIT_STATUS" ]] && GIT_DIRTY=true
 }
 function promptcmd {
 	PWDNAME=$PWD
