@@ -2,6 +2,7 @@ if [[ $- != *i* ]] ; then
 	return
 fi
 
+export GIT_BIN=$(which git 2>/dev/null)
 export TTY=$(tty)
 export COLUMNS=$(tput cols) # COLUMNS is not set under cygwin
 
@@ -69,11 +70,10 @@ function gitstatus {
 	GIT_BRANCH=
 	GIT_DIRTY=
 
-	local GIT_BIN=$(which git 2>/dev/null)
 	[[ -z "$GIT_BIN" ]] && return
 
 	local CUR_DIR=$PWD
-	while [ ! -d "${CUR_DIR}/.git" ] && [ ! "${CUR_DIR}" = "/" ]; do
+	while [ ! -d "${CUR_DIR}/.git" ] && [ ! "${CUR_DIR}" = "" ]; do
 		CUR_DIR=${CUR_DIR%/*};
 	done
 	[[ ! -d "${CUR_DIR}/.git" ]] && return
