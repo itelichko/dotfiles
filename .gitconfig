@@ -11,5 +11,10 @@
 	dump = cat-file -p
 [core]
 	editor = vim
+	pager = vim -R -
+[push]
+	default = tracking
 [merge]
 	tool = vimdiff
+[branch]
+	autosetuprebase = always
