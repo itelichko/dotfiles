@@ -13,6 +13,7 @@ if [[ "$TERM" == *-256color ]] ; then
       RED_REAL=$(escape '1;31m')
     BROWN_REAL=$(escape '1;33m')
      BLUE_REAL=$(escape '1;34m')
+LIGHTBLUE_REAL=$(escape '1;32m')
   MAGENTA_REAL=$(escape '1;35m')
      GRAY_REAL=$(escape '38;5;242m')
 USERCOLOR_REAL=$(escape '38;5;110m')
@@ -22,6 +23,7 @@ else
       RED_REAL=$(escape '1;31m')
     BROWN_REAL=$(escape '1;33m')
      BLUE_REAL=$(escape '1;34m')
+LIGHTBLUE_REAL=$(escape '1;39m')
   MAGENTA_REAL=$(escape '1;35m')
      GRAY_REAL=$(escape '1;30m')
 USERCOLOR_REAL=$(escape '1;36m')
@@ -29,23 +31,25 @@ HOSTCOLOR_REAL=$(escape '1;36m')
 fi
 
 function color {
-	  RESET=$RESET_REAL
-	    RED=$RED_REAL
-	  BROWN=$BROWN_REAL
-	   BLUE=$BLUE_REAL
-	MAGENTA=$MAGENTA_REAL
-	   GRAY=$GRAY_REAL
+    RESET=$RESET_REAL
+      RED=$RED_REAL
+    BROWN=$BROWN_REAL
+     BLUE=$BLUE_REAL
+LIGHTBLUE=$LIGHTBLUE_REAL
+  MAGENTA=$MAGENTA_REAL
+     GRAY=$GRAY_REAL
 USERCOLOR=$USERCOLOR_REAL
 HOSTCOLOR=$HOSTCOLOR_REAL
 }
 
 function nocolor {
-	  RESET=
-	    RED=
-	  BROWN=
-	   BLUE=
-	MAGENTA=
-	   GRAY=
+    RESET=
+      RED=
+    BROWN=
+     BLUE=
+LIGHTBLUE=
+  MAGENTA=
+     GRAY=
 USERCOLOR=
 HOSTCOLOR=
 }
@@ -59,12 +63,19 @@ function prompt {
 		GITSTATUS="${GRAY}(git:${GRAY}${GIT_BRANCH}${GRAY}) "
 	fi fi
 
+	PRETTYPWD=""
+	if [ -z ${PWD/${HOME}\/*/} ] ; then
+		PRETTYPWD="${LIGHTBLUE}~${BLUE}${PWD/${HOME}/}"
+	else
+		PRETTYPWD="${BLUE}${PWD}"
+	fi
+
 	PROMPT="${USERCOLOR}${USER}${GRAY}@${HOSTCOLOR}${HOSTNAME} \
 ${GRAY}&${BROWN}${JOBNUM} \
 ${GRAY}^${BROWN}${TTY:5} \
 ${GRAY}+${BROWN}${SHLVL} \
 ${GRAY}!${BROWN}${HISTNUM} \
-${BLUE}${PWDNAME} ${GITSTATUS}${GRAY}${FILL}\n${MAGENTA}# ${RESET}"
+${PRETTYPWD} ${GITSTATUS}${GRAY}${FILL}\n${MAGENTA}# ${RESET}"
 }
 function gitstatus {
 	GIT_BRANCH=
@@ -88,7 +99,7 @@ function gitstatus {
 	[[ -n "$GIT_STATUS" ]] && GIT_DIRTY=true
 }
 function promptcmd {
-	PWDNAME=$PWD
+	PWDNAME=${PWD}
 	JOBNUM=$(( $(jobs -r | wc -l) + 0 ))
 	HISTNUM=$(( $(history 1 | cut -b 1-6) + 1 ))
 
@@ -122,3 +133,5 @@ alias ..="source ~/.bashrc"
 alias ll="ls -alrth"
 alias 256color="export TERM=screen-256color; .."
 alias 16color="export TERM=screen; .."
+
+[[ -e ~/.local/bin/env.sh ]] && . ~/.local/bin/env.sh
