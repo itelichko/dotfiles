@@ -56,30 +56,30 @@ function! MyFoldTitle()
 	" let line = substitute(line,'\t', repeat(' ',b:MyShiftWidth),'g')
 	let line = substitute(line,'\t', repeat(' ',&shiftwidth),'g')
 	" let line = substitute(line,'/\*\|\*/\|\!@#\|#@!','','g')
-	let line = substitute(line,'\(.\{75,75}\).*','\1...','g')
+	let line = substitute(line,'\(.\{65,65}\).*','\1...','g')
 	let lines_count = v:foldend - v:foldstart
 	return line . " <" . lines_count . " lines>"
 endfunction
 set foldtext=MyFoldTitle()
 
 " TODO fix this, maybe rewrite in vimscript (too slow on large files)
-" 
+"
 " function! PerlReturn(param)
 " 	let g:perlresult = a:param
 " endfunction
-" 
+"
 " function! PerlFoldExpr(lnum)
 " 	perl << EOF
 " 	my ($ok,$num) = VIM::Eval("a:lnum");
 " 	my $prefix_rx   = qr/(?: *(?:"|#|\/\/) *)*/;
 " 	my $wspace_rx   = qr/$prefix_rx(?:EOF|(\s*))/;
 " 	my $finalize_rx = qr/^$wspace_rx(endfunction|endif|\<\/|]|})[^{]*$/i;
-" 
+"
 " 	my $line1 = $curbuf->Get($num);
 " 	$line1 =~ /^$wspace_rx/; my $i = $1;
 " 	$i =~ s/ +/ /i;
 " 	my $i1 = length $i;
-" 
+"
 " 	if    ($line1 =~ /^$wspace_rx$/) { $R = "=" }
 " 	elsif ($line1 =~ /$finalize_rx/)     { $R = "<".($i1+1) }
 " 	else { my $line2;
@@ -90,7 +90,7 @@ set foldtext=MyFoldTitle()
 " 		$line2 =~ /^$wspace_rx/; my $i = $1;
 " 		$i =~ s/ +/ /i;
 " 		my $i2 = length $i;
-" 
+"
 " 		if ($line2 =~ /$finalize_rx/) { $R = "=" } else {
 " 			if    ($i1 < $i2) { $R = ">".($i1+1) }
 " 			elsif ($i1 > $i2) { $R = "<".($i2+1) }
@@ -125,6 +125,34 @@ augroup test_path_set
 	au BufEnter *.ft  call SetPathToProperLocation()
 augroup END
 
+let g:slime_target="tmux"
+let g:fortune_vimtips_auto_display=0
+let g:startify_files_number=5
+
+let g:rainbow_active = 1
+let g:rainbow_conf = {
+\   'guifgs':   ['royalblue3' , 'darkorange3' , 'seagreen3' , 'firebrick' ],
+\   'ctermfgs': ['darkred' , 'darkgreen' , 'darkcyan' , 'darkyellow' , 'darkmagenta' ],
+\   'operators': '_,_',
+\   'parentheses': [['(',')'], ['\[','\]'], ['{','}'], ['\(\(\s\|-\|=\)<*\)\@<!<\|<\(<*\(\s\|-\|=\)\)\@!','\(\(\s\|-\|=\)>*\)\@<!>\|>\(>*\(\s\|-\|=\)\)\@!'] ],
+\   'separately': {
+\       '*': {},
+\       'lisp': {
+\           'guifgs': ['royalblue3', 'darkorange3', 'seagreen3', 'firebrick', 'darkorchid3'],
+\           'ctermfgs': ['darkgray', 'darkblue', 'darkmagenta', 'darkcyan', 'darkred', 'darkgreen'],
+\       },
+\       'vim': {
+\           'parentheses': [['fu\w* \s*.*)','endfu\w*'], ['for','endfor'], ['while', 'endwhile'], ['if','_elseif\|else_','endif'], ['(',')'], ['\[','\]'], ['{','}']],
+\       },
+\       'tex': {
+\           'parentheses': [['(',')'], ['\[','\]'], ['\\begin{.*}','\\end{.*}']],
+\       },
+\       'css': 0,
+\       'stylus': 0,
+\   }
+\}
+
+
 	au FocusLost * :silent! wa
 " 	au BufNewFile,BufRead *.xml %!~/using/scripts/formatXml.pl
 	au BufNewFile,BufRead *.ft  set commentstring=\\\ %s
@@ -132,6 +160,10 @@ augroup END
 	au BufNewFile,BufRead *.cpp set commentstring=\ //\ %s
 	au BufNewFile,BufRead *.pod %!/usr/bin/pod2text
 	au BufReadPost fugitive://* set bufhidden=delete
+
+	au BufNewFile,BufRead * match TODO /\s\+$/
+	au InsertEnter        * match TODO /\s\+\%#\@<!$/
+	au InsertLeave        * match TODO /\s\+$/
 
 " TODO do I need these? Probably not.
 " function! LoadSettings(ext)
@@ -144,7 +176,6 @@ augroup END
 " nnoremap <C-\>      /<+.*+><cr>:silent! foldopen!<cr>d/+>/e<cr>:nohls<cr>i
 " inoremap <C-\> <ESC>/<+.*+><cr>:silent! foldopen!<cr>d/+>/e<cr>:nohls<cr>i
 " iabbrev for( for(!!;<++>;<++>){<cr><++><cr>}<Esc>:call search('!!','b')<cr>cf!
-
 
 " TODO rewrite as smart Tab mapping that checks previous symbols
 " imap f;<Tab> :   ;<esc>hhi
@@ -236,7 +267,7 @@ if has('perl')
 
 " simple REPL interaction for forth
 perl << EOF
-my $replPipe = "~/.local/bin/repl.sh";
+my $replPipe = "~/.local/bin/gforth-repl-helper.sh";
 my $replBuffer;
 sub replAccum      { $replBuffer .= $_[0]."\n" }
 sub replPasteAccum {
