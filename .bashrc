@@ -119,6 +119,22 @@ function promptcmd { #{{{
 	prompt
 	PS1=$PROMPT
 } #}}}
+
+SSH_ENV="$HOME/.ssh/environment"
+
+function runagent { #{{{
+	/usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+	chmod 600 "${SSH_ENV}"
+	. "${SSH_ENV}" > /dev/null
+} #}}}
+
+if [ -f "${SSH_ENV}" ]; then # Source SSH settings, if applicable
+	. "${SSH_ENV}" > /dev/null
+	ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+		runagent;
+	}
+else runagent; fi
+
 export PROMPT_COMMAND=promptcmd
 export LANG=en_US.UTF-8
 export PATH="$HOME/.local/bin:$PATH"
