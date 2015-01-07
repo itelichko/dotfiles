@@ -247,8 +247,8 @@ nnoremap <tab> %
 vnoremap <tab> %
 
 let mapleader=","
-nnoremap <leader>a :Ack 
-nnoremap <leader>m :Man 
+nnoremap <leader>a :Ack
+nnoremap <leader>m :Man
 nnoremap <leader>s :split<CR>
 nnoremap <leader>n :new<CR>
 nnoremap <leader>o :only<CR>

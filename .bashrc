@@ -30,7 +30,7 @@ USERCOLOR_REAL=$(escape '1;36m')
 HOSTCOLOR_REAL=$(escape '1;36m')
 fi
 
-function color {
+function color { #{{{
     RESET=$RESET_REAL
       RED=$RED_REAL
     BROWN=$BROWN_REAL
@@ -40,9 +40,8 @@ LIGHTBLUE=$LIGHTBLUE_REAL
      GRAY=$GRAY_REAL
 USERCOLOR=$USERCOLOR_REAL
 HOSTCOLOR=$HOSTCOLOR_REAL
-}
-
-function nocolor {
+} #}}}
+function nocolor { #{{{
     RESET=
       RED=
     BROWN=
@@ -52,9 +51,9 @@ LIGHTBLUE=
      GRAY=
 USERCOLOR=
 HOSTCOLOR=
-}
+} #}}}
 
-function prompt {
+function prompt { #{{{
 	local GITSTATUS=
 	if [ ! -z $GIT_BRANCH ]; then
 	if [ ! -z $GIT_DIRTY  ]; then
@@ -76,8 +75,8 @@ ${GRAY}^${BROWN}${TTY:5} \
 ${GRAY}+${BROWN}${SHLVL} \
 ${GRAY}!${BROWN}${HISTNUM} \
 ${PRETTYPWD} ${GITSTATUS}${GRAY}${FILL}\n${MAGENTA}# ${RESET}"
-}
-function gitstatus {
+} #}}}
+function gitstatus { #{{{
 	GIT_BRANCH=
 	GIT_DIRTY=
 
@@ -97,8 +96,8 @@ function gitstatus {
 
 	local GIT_STATUS=$($GIT_BIN status --porcelain 2>/dev/null)
 	[[ -n "$GIT_STATUS" ]] && GIT_DIRTY=true
-}
-function promptcmd {
+} #}}}
+function promptcmd { #{{{
 	PWDNAME=${PWD}
 	JOBNUM=$(( $(jobs -r | wc -l) + 0 ))
 	HISTNUM=$(( $(history 1 | cut -b 1-6) + 1 ))
@@ -119,7 +118,7 @@ function promptcmd {
 	color
 	prompt
 	PS1=$PROMPT
-}
+} #}}}
 export PROMPT_COMMAND=promptcmd
 export LANG=en_US.UTF-8
 export PATH="$HOME/.local/bin:$PATH"
