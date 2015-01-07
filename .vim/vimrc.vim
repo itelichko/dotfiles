@@ -126,6 +126,7 @@ augroup test_path_set
 augroup END
 
 let g:slime_target="tmux"
+let g:startify_disable_at_vimenter=1
 let g:fortune_vimtips_auto_display=0
 let g:startify_files_number=5
 
