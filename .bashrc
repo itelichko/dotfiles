@@ -8,6 +8,18 @@ export COLUMNS=$(tput cols) # COLUMNS is not set under cygwin
 
 function escape { echo "\[\033[$1\]"; }
 
+function str2clr { local S="$1"
+	if [ "$S" != "root" ] ; then
+		local C=0
+		while [ ! -z "${S}" ]; do
+			local L=$(printf "%d" "'${S:0:1}") # decimal code of first letter
+			C=$(( ($C+$L)%137 ))
+			S=${S:1} # chop first letter from string
+		done
+		echo $(($C + 94)) # match the range of readable colors
+	else echo 255; fi
+}
+
 if [[ "$TERM" == *-256color ]] ; then
     RESET_REAL=$(escape '0m')
       RED_REAL=$(escape '1;31m')
@@ -16,8 +28,8 @@ if [[ "$TERM" == *-256color ]] ; then
 LIGHTBLUE_REAL=$(escape '1;32m')
   MAGENTA_REAL=$(escape '1;35m')
      GRAY_REAL=$(escape '38;5;242m')
-USERCOLOR_REAL=$(escape '38;5;110m')
-HOSTCOLOR_REAL=$(escape '38;5;110m')
+USERCOLOR_REAL=$(escape "38;5;$(str2clr "${USER}")m")
+HOSTCOLOR_REAL=$(escape "38;5;$(str2clr "${HOSTNAME}")m")
 else
     RESET_REAL=$(escape '0m')
       RED_REAL=$(escape '1;31m')
