@@ -15,6 +15,10 @@
 !.local/bin/ack
 !.local/bin/info
 
+!.ssh/
+!.ssh/authorized_keys
+!.ssh/config
+
 !.vimrc
 !.vim
 !.vim/vimrc
