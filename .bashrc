@@ -69,9 +69,9 @@ function prompt { #{{{
 	local GITSTATUS=
 	if [ ! -z $GIT_BRANCH ]; then
 	if [ ! -z $GIT_DIRTY  ]; then
-		GITSTATUS="${GRAY}(git:${RED}${GIT_BRANCH}${GRAY}) "
+		GITSTATUS="${RED}@${GIT_BRANCH} "
 	else
-		GITSTATUS="${GRAY}(git:${GRAY}${GIT_BRANCH}${GRAY}) "
+		GITSTATUS="${GRAY}@${GIT_BRANCH} "
 	fi fi
 
 	PRETTYPWD=""
@@ -140,12 +140,14 @@ function runagent { #{{{
 	. "${SSH_ENV}" > /dev/null
 } #}}}
 
-if [ -f "${SSH_ENV}" ]; then # Source SSH settings, if applicable
-	. "${SSH_ENV}" > /dev/null
-	ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-		runagent;
-	}
-else runagent; fi
+if [ -z "${SSH_AUTH_SOCK}" -o -n "${SSH_AGENT_PID}" ]; then
+	if [ -f "${SSH_ENV}" ]; then # no forwarded agent, use (or start) local one
+		. "${SSH_ENV}" > /dev/null # source current SSH settings
+		ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+			runagent; # agent is (probably) dead, restart it
+		}
+	else runagent; fi
+fi
 
 export PROMPT_COMMAND=promptcmd
 export LANG=en_US.UTF-8
