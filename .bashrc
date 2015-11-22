@@ -161,6 +161,7 @@ export LANG=en_US.UTF-8
 export PATH="$HOME/.local/bin:$PATH"
 export PAGER="/usr/bin/less -isR"
 export EDITOR="/usr/bin/vim"
+export XAUTHORITY="${HOME}/.Xauthority"
 
 umask 0077
 set -o vi
