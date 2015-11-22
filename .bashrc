@@ -132,21 +132,28 @@ function promptcmd { #{{{
 	PS1=$PROMPT
 } #}}}
 
-SSH_ENV="$HOME/.ssh/environment"
+SSH_AGENT_ENV="$HOME/.ssh/environment"
+SSH_AGENT_LOCK="$HOME/.ssh/lock"
 
 function runagent { #{{{
-	/usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-	chmod 600 "${SSH_ENV}"
-	. "${SSH_ENV}" > /dev/null
+	(
+		exec 888>&- # close lock fd before ssh-agent forks so it can be released
+		/usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_AGENT_ENV}"
+	)
+	chmod 600 "${SSH_AGENT_ENV}"
 } #}}}
 
 if [ -z "${SSH_AUTH_SOCK}" -o -n "${SSH_AGENT_PID}" ]; then
-	if [ -f "${SSH_ENV}" ]; then # no forwarded agent, use (or start) local one
-		. "${SSH_ENV}" > /dev/null # source current SSH settings
-		ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-			runagent; # agent is (probably) dead, restart it
-		}
-	else runagent; fi
+	(
+		flock 888 # no forwarded agent, must start/use local one
+		if [ -f "${SSH_AGENT_ENV}" ]; then
+			. "${SSH_AGENT_ENV}" > /dev/null # source current SSH settings
+			ps -p ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+				runagent; # agent is (probably) dead, restart it
+			}
+		else runagent; fi
+	) 888>${SSH_AGENT_LOCK}
+	. "${SSH_AGENT_ENV}" > /dev/null # cannot export variables in the subshell
 fi
 
 export PROMPT_COMMAND=promptcmd
