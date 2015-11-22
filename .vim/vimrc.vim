@@ -34,6 +34,7 @@ set smartcase
 set hlsearch
 set list
 set listchars=tab:▸\ ,eol:↵
+set diffopt+=vertical
 " set statusline=%<%f\ %h\%m\%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
 " set statusline=%F%m%r%h%w\ [FMT=%{&ff}]\ [TYPE=%Y]\
 "   [ASC=\%03.3b(\%02.2B)]\ [POS=%03l,%02v(%L)]\ [%p%%]
